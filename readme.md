@@ -1,27 +1,44 @@
 ## CCP GPU 서버  
 
-1. node06  
-+-----------------------------------------------------------------------------+  
-| NVIDIA-SMI 384.145                Driver Version: 384.145                   |  
-|-------------------------------+----------------------+----------------------+  
-| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |  
-| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |  
-|===============================+======================+======================|  
-|   0  Tesla P100-PCIE...  Off  | 00000000:3B:00.0 Off |                    0 |  
-| N/A   44C    P0    33W / 250W |      0MiB / 16276MiB |      3%      Default |  
-+-------------------------------+----------------------+----------------------+  
-                                                                                 
-+-----------------------------------------------------------------------------+  
-| Processes:                                                       GPU Memory |  
-|  GPU       PID   Type   Process name                             Usage      |  
-|=============================================================================|  
-|  No running processes found                                                 |  
-+-----------------------------------------------------------------------------+  
 
-2. 
+1. List
 
+ - Node06
+	- Tesla p100-PCIE  x 1  
+    - Tensorflow2  
 
+ - Node07  
+	- TITAN RTX x 2  
+    - Pytorch 1.6.0 
 
+2. Setup Environment  
+
+ - Node06 Tensorflow2 docker server  
+
+  1) Make Tensorflow2 container  
+```bash
+source /x5/cms/jwkim/TF_GPU/node06_docker/make_container.sh [YOUR WORKING DIRECTORY] [YOUR NAME or ID]   
+```  
+
+  2) Access above container  
+```bash
+source /x5/cms/jwkim/TF_GPU/node06_docker/Access_container.sh [YOUR NAME or ID]  
+```  
+
+  3) Please setup basic packages like git,vim,pandas,h5py.... in the container using **apt-get**  
+  4) Default working directory in the container is **root/test** and this will be mounter to your real working directory  
+
+  
+ - Node07 Pytorch conda environment  
+
+You can use almost all packages for machine learning with pytorch with this commands  
+
+```bash
+source /home/jwkim/Anaconda3/setup.sh
+conda activate /home/jwkim/anaconda3/envs/Torch_node07/
+```  
+
+---
 
 
 
