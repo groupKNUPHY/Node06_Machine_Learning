@@ -1,7 +1,7 @@
 ## CCP GPU 서버  
 
 
-1. List
+### 1. List
 
  - Node06
 	- Tesla p100-PCIE  x 1  
@@ -11,9 +11,9 @@
 	- TITAN RTX x 2  
     - Pytorch 1.6.0 
 
-2. Setup Environment  
+### 2. Setup Environment  
 
- - Node06 Tensorflow2 docker server  
+###  - Node06 Tensorflow2 docker server  
 
   1) Make Tensorflow2 container  
 ```bash
@@ -29,7 +29,7 @@ source /x5/cms/jwkim/TF_GPU/node06_docker/Access_container.sh [YOUR NAME or ID]
   4) Default working directory in the container is **root/test** and this will be mounter to your real working directory  
 
   
- - Node07 Pytorch conda environment  
+###  - Node07 Pytorch conda environment  
 
 You can use almost all packages for machine learning with pytorch with this commands  
 
