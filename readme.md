@@ -3,13 +3,13 @@
 
 ### 1. List
 
- - Node06
-	- Tesla p100-PCIE  x 1  
-    - Tensorflow2  
+ - **Node06**
+	- GPU: Tesla p100-PCIE  x 1  
+    - Software: Tensorflow2 (Docker server)  
 
- - Node07  
-	- TITAN RTX x 2  
-    - Pytorch 1.6.0 
+ - **Node07**  
+	- GPU: TITAN RTX x 2  
+    - Software: Pytorch 1.6.0 (Conda Environment)  
 
 ### 2. Setup Environment  
 
