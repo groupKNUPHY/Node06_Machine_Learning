@@ -6,13 +6,25 @@ class Model(nn.Module):
 
 	def __init__(self):
 		super(Model, self).__init__()
-		self.l1 = nn.Linear(8, 6)
-		self.l2 = nn.Linear(6, 4)
-		self.l3 = nn.Linear(4, 1)
-		self.sigmoid = nn.Sigmoid()
+
+		self.fc = nn.Sequential(
+
+			# 1st layer
+			nn.Linear(8, 32),
+			nn.ReLU(),
+			nn.BatchNorm1d(32),
+			
+			# 2nd layer
+            nn.Linear(32, 32),
+			nn.ReLU(),
+			nn.BatchNorm1d(32),
+
+			# 5th layer
+            nn.Linear(32, 1),
+			nn.Sigmoid(),
+		)
+
 
 	def forward(self, x):
-		out1 = F.relu(self.l1(x))
-		out2 = F.relu(self.l2(out1))
-		y_pred = self.sigmoid(self.l3(out2))
+		y_pred = self.fc(x)
 		return y_pred

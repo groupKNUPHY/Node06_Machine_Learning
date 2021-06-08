@@ -26,12 +26,26 @@ GPU_check()
 use_gpu=True
 
 
-## Dataset, Hyperparameter
-batch_size = 32
-LR = [0.01]
-EPOCH = [100, 500, 1000]
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('--epoch', type=int,default=100,
+            help="--epoch EPOCH")
+parser.add_argument('--batch', type=int,default=32,
+            help="--batch BATCH_SIZE")
+parser.add_argument('--lr', type=float,default=0.01,
+            help="--lr LEARNING_RATE")
+args = parser.parse_args()
 
-sys.path.append("/x4/cms/dylee/Delphes/ML/WZG_ML/python")
+## Hyperparameter
+batch_size = args.batch
+LR = args.lr
+EPOCH = args.epoch
+
+
+
+
+##  Data loading
+sys.path.append("../python/")
 from DataLoader import DiabetesDataset
 
 dataset = DiabetesDataset()
@@ -48,7 +62,7 @@ val_loader = DataLoader(dataset=dataset,batch_size=batch_size*2,shuffle=False,nu
 test_loader = DataLoader(dataset=dataset,batch_size=batch_size,shuffle=False,num_workers=2)
 
 
-## Model, Device set and Optimizer set
+## Model loading
 from Model import Model
 
 device = 'cpu'
@@ -57,10 +71,10 @@ if torch.cuda.is_available() & use_gpu:
 	model = model.to('cuda')
 	device = 'cuda'
 
-optm = optim.Adam(model.parameters(), lr=0.01)
+optm = optim.Adam(model.parameters(), lr=LR)
 
 
-## Training Step
+## Training with GPU!!!
 from tqdm.auto import tqdm
 from sklearn.metrics import accuracy_score
 
@@ -69,7 +83,7 @@ try:
 	history = {'loss': [], 'acc': [], 'val_loss': [], 'val_acc': []}
 
 # Start EPOCH
-	for epoch in tqdm(range(1,EPOCH[1]+1)):
+	for epoch in tqdm(range(1,EPOCH+1)):
 
 		# Training Stage
 		model.train()

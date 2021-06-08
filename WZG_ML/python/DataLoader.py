@@ -4,7 +4,7 @@ from torch.utils.data import Dataset
 import numpy as np
 
 
-infile = "/x4/cms/dylee/Delphes/ML/WZG_ML/data/diabetes.csv.gz"
+infile = "../data/diabetes.csv.gz"
 
 class DiabetesDataset(Dataset):
 	""" Diabetes dataset """

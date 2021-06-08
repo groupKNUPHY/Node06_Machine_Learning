@@ -25,13 +25,23 @@ def GPU_check():
 GPU_check()
 use_gpu=True
 
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('--epoch', type=int,default=100,
+            help="--epoch EPOCH")
+parser.add_argument('--batch', type=int,default=32,
+            help="--batch BATCH_SIZE")
+parser.add_argument('--lr', type=float,default=0.01,
+            help="--lr LEARNING_RATE")
+args = parser.parse_args()
 
-## Dataset, Hyperparameter
-batch_size = 32
-LR = [0.01]
-EPOCH = [100, 500, 1000]
+## Hyperparameter
+batch_size = args.batch
+LR = args.lr
+EPOCH = args.epoch
 
-sys.path.append("/x4/cms/dylee/Delphes/ML/WZG_ML/python")
+
+sys.path.append("../python")
 from DataLoader import DiabetesDataset
 
 dataset = DiabetesDataset()
@@ -58,7 +68,7 @@ if torch.cuda.is_available() & use_gpu:
 
 model.load_state_dict(torch.load('weightFile.pth'))
 
-optm = optim.Adam(model.parameters(), lr=0.01)
+optm = optim.Adam(model.parameters(), lr=LR)
 
 
 # Evaluation
