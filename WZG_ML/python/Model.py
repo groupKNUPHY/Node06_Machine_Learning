@@ -19,7 +19,7 @@ class Model(nn.Module):
 			nn.ReLU(),
 			nn.BatchNorm1d(32),
 
-			# 5th layer
+			# 3rd layer
             nn.Linear(32, 1),
 			nn.Sigmoid(),
 		)
