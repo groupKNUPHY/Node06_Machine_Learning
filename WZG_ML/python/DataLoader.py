@@ -2,6 +2,8 @@ import torch
 from torch import from_numpy
 from torch.utils.data import Dataset
 import numpy as np
+from sklearn.preprocessing import MinMaxScaler
+
 
 
 infile = "../data/diabetes.csv.gz"
@@ -15,6 +17,14 @@ class DiabetesDataset(Dataset):
 		self.len = xy.shape[0]
 		self.x_data = from_numpy(xy[:, 0:-1])
 		self.y_data = from_numpy(xy[:, [-1]])
+
+		
+		# -- MinMax Scaler
+
+		#scaler = MinMaxScaler()
+		#scaler.fit(self.x_data)
+		#self.x_data = scaler.transform(self.x_data)
+
 
 	def __getitem__(self, index):
 		return self.x_data[index], self.y_data[index]
