@@ -87,13 +87,20 @@ try:
 		optm.zero_grad() # initialize grad data
 		train_loss, train_acc = 0., 0.
 		
-		#for i, (x_data, label, weight) in enumerate(train_loader):
-		for i, (x_data, label, weight, scalefactor) in enumerate(train_loader):
+		## <-- Scale factor:  BKG_YIELD * SF = SIG_YIELD -->
+		
+		for i, (x_data, label, weight) in enumerate(train_loader): # Not use SF
+		#for i, (x_data, label, weight, scalefactor) in enumerate(train_loader): # use SF
+			
 			x_data = x_data.float().to(device) # Make tensor on the gpu or cpu
 			label = label.float().to(device)
-			scalefactor = scalefactor.float().to(device)
-			weight = weight.float().to(device)*scalefactor
-	#		weight = weight.float().to(device)
+			
+			# Use SF
+			#scalefactor = scalefactor.float().to(device)
+			#weight = weight.float().to(device)*scalefactor
+			
+			# Not use SF
+			weight = weight.float().to(device)
 			
 
 			pred = model(x_data)
@@ -115,13 +122,18 @@ try:
 		model.eval()
 		val_loss, val_acc = 0., 0.
 		
-#		for i, (x_data,label, weight) in enumerate(val_loader):
-		for i, (x_data,label, weight, scalefactor) in enumerate(val_loader):
+		for i, (x_data,label, weight) in enumerate(val_loader): # Not use SF
+		#for i, (x_data,label, weight, scalefactor) in enumerate(val_loader): # Use SF
 			x_data = x_data.float().to(device)
 			label = label.float().to(device)
-			scalefactor = scalefactor.float().to(device)
-			weight = weight.float().to(device)*scalefactor	
-#			weight = weight.float().to(device)	
+			
+			
+			# Use SF
+			#scalefactor = scalefactor.float().to(device)
+			#weight = weight.float().to(device)*scalefactor	
+			
+			# Not use SF
+			weight = weight.float().to(device)	
 	
 			pred = model(x_data)
 			crit = torch.nn.BCELoss(weight=weight)
