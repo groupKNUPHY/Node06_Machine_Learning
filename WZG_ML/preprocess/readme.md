@@ -1,7 +1,7 @@
 ### Pre-Process ###
 
 # dataframe make code
-[link](https://github.com/groupKNUPHY/Node06_Machine_Learning/blob/master/WZG_ML/preprocess/binary_make.py)
+[Uproot to dataframe](https://github.com/groupKNUPHY/Node06_Machine_Learning/blob/master/WZG_ML/preprocess/binary_make.py)
 
 # 1. 데이터 로드 및 정리
 - 각 채널들의 npy 파일을 로드 (eee, eem, emm, mmm)
@@ -13,7 +13,7 @@
 
 
 # 2. column 변경
-- [link]https://github.com/groupKNUPHY/Node06_Machine_Learning/blob/master/WZG_ML/preprocess/coladd.py
+- [Control Columns](https://github.com/groupKNUPHY/Node06_Machine_Learning/blob/master/WZG_ML/preprocess/coladd.py)
 - 위에서 저장한 hdf5 형식의 파일 읽기
 - df.drop으로 필요없는 column 삭제 (lepton mass 등...)
 - 새로 만들어줄 column의 variable 정의
