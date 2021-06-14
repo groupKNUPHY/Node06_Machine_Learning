@@ -6,10 +6,12 @@ history_df = pd.read_csv(csv_file)
 
 history_df[['loss', 'val_loss']].plot()
 plt.grid()
+plt.savefig('loss(SF,512)')
 plt.show()
 
 
 plt.close()
 history_df[['acc', 'val_acc']].plot()
 plt.grid()
+plt.savefig('acc(SF,512)')
 plt.show()

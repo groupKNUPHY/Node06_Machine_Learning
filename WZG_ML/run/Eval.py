@@ -29,7 +29,7 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('--epoch', type=int,default=100,
             help="--epoch EPOCH")
-parser.add_argument('--batch', type=int,default=32,
+parser.add_argument('--batch', type=int,default=512,
             help="--batch BATCH_SIZE")
 parser.add_argument('--lr', type=float,default=0.01,
             help="--lr LEARNING_RATE")
@@ -42,9 +42,9 @@ EPOCH = args.epoch
 
 
 sys.path.append("../python")
-from DataLoader import DiabetesDataset
+from DataLoader import WZGDataset
 
-dataset = DiabetesDataset()
+dataset = WZGDataset()
 
 lengths = [int(0.6*len(dataset)), int(0.2*len(dataset))]
 lengths.append(len(dataset) - sum(lengths))
@@ -53,8 +53,6 @@ torch.manual_seed(123456)
 train_dataset, val_dataset, test_dataset = torch.utils.data.random_split(dataset, lengths)
 torch.manual_seed(torch.initial_seed())
 
-train_loader = DataLoader(dataset=dataset,batch_size=batch_size,shuffle=False,num_workers=2)
-val_loader = DataLoader(dataset=dataset,batch_size=batch_size*2,shuffle=False,num_workers=2)
 test_loader = DataLoader(dataset=dataset,batch_size=batch_size,shuffle=False,num_workers=2)
 
 ## Device set and Optimizer set
@@ -76,33 +74,47 @@ from tqdm.auto import tqdm
 from sklearn.metrics import roc_curve, roc_auc_score, confusion_matrix
 
 labels, preds = [], []
+weights, scaleWeights = [], []
 predFile = 'prediction.csv'
 
-for i, (data, label) in enumerate(tqdm(test_loader)):
+for i, (data, label, weight, scalefactor) in enumerate(tqdm(test_loader)):
 	data = data.float().to(device)
+	weight = weight.float()
 	pred = model(data).detach().to('cpu').float()
 
 	labels.extend([x.item() for x in label])
 	preds.extend([x.item() for x in pred.view(-1)])
+	weights.extend([x.item() for x in weight.view(-1)])
+	scaleWeights.extend([x.item() for x in (weight*scalefactor).view(-1)])
 
-df = pd.DataFrame({'label': labels, 'prediction': preds})
+df = pd.DataFrame({'label': labels, 'prediction': preds, 'weight': weights, 'scaleWeight': scaleWeights})
 df.to_csv(predFile, index=False)
 
 df = pd.read_csv(predFile)
-tpr, fpr, thr = roc_curve(df['label'], df['prediction'], pos_label=0)
-auc = roc_auc_score(df['label'], df['prediction'])
+tpr, fpr, thr = roc_curve(df['label'], df['prediction'], sample_weight=df['weight'], pos_label=0)
+auc = roc_auc_score(df['label'], df['prediction'], sample_weight=df['weight'])
 
-df_bkg = df[df.label == 0]
-df_sig = df[df.label == 1]
+df_bkg = df[df.label == 1]
+df_sig = df[df.label == 0]
 plt.rcParams['figure.figsize'] = (6,6)
 
-hbkg1 = df_bkg['prediction'].plot(kind='hist', histtype='step', bins=15,linewidth=3, color='crimson', label='Negative')
-hsig1 = df_sig['prediction'].plot(kind='hist', histtype='step',bins=15, linewidth=3,color='royalblue', label='Positive')
+hbkg1 = df_bkg['prediction'].plot(kind='hist', histtype='step', weights=df_bkg['weight'], bins=15,linewidth=3, color='crimson', label='BKG')
+hsig1 = df_sig['prediction'].plot(kind='hist', histtype='step', weights=df_sig['weight'], bins=15, linewidth=3,color='royalblue', label='SIG')
 plt.xlabel('DNN score', fontsize=17)
 plt.ylabel('Events', fontsize=17)
 plt.legend(fontsize=15)
 plt.grid()
-plt.savefig("DNN_score.png")
+plt.savefig("DNN_score(SF,512).png")
+plt.close()
+
+hbkg2 = df_bkg['prediction'].plot(kind='hist', histtype='step', weights=df_bkg['scaleWeight'], bins=15,linewidth=3, color='crimson', label='BKG')
+hsig2 = df_sig['prediction'].plot(kind='hist', histtype='step', weights=df_sig['scaleWeight'], bins=15, linewidth=3, color='royalblue', label='SIG')
+plt.xlabel('DNN score', fontsize=17)
+plt.ylabel('Events', fontsize=17)
+plt.legend(fontsize=15)
+plt.grid()
+plt.savefig("DNN_score2(SF,512).png")
+
 
 plt.close()
 plt.plot(fpr, tpr, '-',linewidth=2, label='%s %.3f' % ("auc", auc))
@@ -111,7 +123,7 @@ plt.ylim(0, 1.000)
 plt.xlabel('False Positive Rate', fontsize=17)
 plt.ylabel('True Positive Rate', fontsize=17)
 plt.legend(fontsize =17)
-plt.savefig("ROC.png")
+plt.savefig("ROC(SF,512).png")
 
 
 
