@@ -11,7 +11,7 @@ conda activate Torch_node07 # pytorch 가상환경으로 설정
 
 
 ### 1. Preprocessing step
- - [preprocess]https://github.com/groupKNUPHY/Node06_Machine_Learning/tree/master/WZG_ML/preprocess
+ - [여기서 확인새주세요](https://github.com/groupKNUPHY/Node06_Machine_Learning/tree/master/WZG_ML/preprocess)
 
 
 ### 2. Traing step
