@@ -77,17 +77,19 @@ labels, preds = [], []
 weights, scaleWeights = [], []
 predFile = 'prediction.csv'
 
-for i, (data, label, weight, scalefactor) in enumerate(tqdm(test_loader)):
+#for i, (data, label, weight, scalefactor) in enumerate(tqdm(test_loader)): # Use SF
+for i, (data, label, weight) in enumerate(tqdm(test_loader)): # Not use SF
 	data = data.float().to(device)
 	weight = weight.float()
 	pred = model(data).detach().to('cpu').float()
 
 	labels.extend([x.item() for x in label])
 	preds.extend([x.item() for x in pred.view(-1)])
-	weights.extend([x.item() for x in weight.view(-1)])
-	scaleWeights.extend([x.item() for x in (weight*scalefactor).view(-1)])
+	weights.extend([x.item() for x in weight.view(-1)]) 
+	#scaleWeights.extend([x.item() for x in (weight*scalefactor).view(-1)]) # Use SF
 
-df = pd.DataFrame({'label': labels, 'prediction': preds, 'weight': weights, 'scaleWeight': scaleWeights})
+#df = pd.DataFrame({'label': labels, 'prediction': preds, 'weight': weights, 'scaleWeight': scaleWeights}) # Use SF
+df = pd.DataFrame({'label': labels, 'prediction': preds, 'weight': weights}) # Not use SF
 df.to_csv(predFile, index=False)
 
 df = pd.read_csv(predFile)
@@ -104,16 +106,17 @@ plt.xlabel('DNN score', fontsize=17)
 plt.ylabel('Events', fontsize=17)
 plt.legend(fontsize=15)
 plt.grid()
-plt.savefig("DNN_score(SF,512).png")
+plt.savefig("DNN_score.png")
 plt.close()
 
-hbkg2 = df_bkg['prediction'].plot(kind='hist', histtype='step', weights=df_bkg['scaleWeight'], bins=15,linewidth=3, color='crimson', label='BKG')
-hsig2 = df_sig['prediction'].plot(kind='hist', histtype='step', weights=df_sig['scaleWeight'], bins=15, linewidth=3, color='royalblue', label='SIG')
-plt.xlabel('DNN score', fontsize=17)
-plt.ylabel('Events', fontsize=17)
-plt.legend(fontsize=15)
-plt.grid()
-plt.savefig("DNN_score2(SF,512).png")
+# DNN score with SF
+#hbkg2 = df_bkg['prediction'].plot(kind='hist', histtype='step', weights=df_bkg['scaleWeight'], bins=15,linewidth=3, color='crimson', label='BKG')
+#hsig2 = df_sig['prediction'].plot(kind='hist', histtype='step', weights=df_sig['scaleWeight'], bins=15, linewidth=3, color='royalblue', label='SIG')
+#plt.xlabel('DNN score', fontsize=17)
+#plt.ylabel('Events', fontsize=17)
+#plt.legend(fontsize=15)
+#plt.grid()
+#plt.savefig("DNN_score2(SF,512).png")
 
 
 plt.close()
@@ -123,7 +126,7 @@ plt.ylim(0, 1.000)
 plt.xlabel('False Positive Rate', fontsize=17)
 plt.ylabel('True Positive Rate', fontsize=17)
 plt.legend(fontsize =17)
-plt.savefig("ROC(SF,512).png")
+plt.savefig("ROC.png")
 
 
 
