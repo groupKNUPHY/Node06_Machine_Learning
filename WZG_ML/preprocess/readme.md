@@ -1,7 +1,7 @@
 ### Pre-Process ###
 
 # dataframe make code
-[link]https://github.com/groupKNUPHY/Node06_Machine_Learning/blob/master/WZG_ML/preprocess/binary_make.py
+[link](https://github.com/groupKNUPHY/Node06_Machine_Learning/blob/master/WZG_ML/preprocess/binary_make.py)
 
 # 1. 데이터 로드 및 정리
 - 각 채널들의 npy 파일을 로드 (eee, eem, emm, mmm)
